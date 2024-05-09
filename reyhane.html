@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>نمایش اطلاعات منطقه زمانی</title>
+<style>
+    body {
+        
+        font-family: Arial, sans-serif;
+        text-align: center;
+        background-color: #f9eef2; /* رنگ صورتی کم رنگ */
+    }
+    .container {
+        margin-top: 50px;
+    }
+    .european {
+    border: 2px solid red; /* کادر قرمز برای کشورهای اروپایی */
+}
+
+#message {
+    display: none;
+    background-color: #f9caca; /* رنگ قرمز کم رنگ */
+    padding: 10px;
+    margin-top: 10px;
+}
+    input[type="text"] {
+        padding: 5px;
+        width: 200px;
+    }
+    button {
+        padding: 5px 10px;
+        background-color: #df84dfbd;
+        color: rgba(0, 0, 0, 0.788);
+        border: none;
+        cursor: pointer;
+    }
+    
+</style>
+
+</head>
+<body>
+<div class="container">
+    <h2>انتخاب نام منطقه زمانی</h2>
+    <input type="text" id="timezoneInput" placeholder=" منطقه زمانی " > 
+    <button onclick="getTimezoneInfo()">نمایش اطلاعات</button>
+    <div id="result"></div>
+</div>
+<select id="countries" multiple>
+   
+    <option value="canada">Canada</option>
+    <option value="italy" class="european">Italy</option>
+    <option value="usa">USA</option>
+    <option value="japan">Japan</option>
+    <option value="germany" class="european">Germany</option>
+    <option value="japan">Japan</option>
+    <option value="france" class="european">France</option>
+     
+</select>
+
+<button onclick="checkSelection()">بررسی انتخاب</button>
+<p id="message"></p>
+
+<script>
+function getTimezoneInfo() {
+    var apiKey = "BK59JIFJPBBO";
+    var timezone = document.getElementById("timezoneInput").value;
+    var url = "http://api.timezonedb.com/v2/get-time-zone?key=" + apiKey + "&format=json&by=zone&zone=" + timezone;
+
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        var countryName = data.countryName;
+        var dateTime = new Date(data.timestamp * 1000);
+        var resultDiv = document.getElementById("result");
+        resultDiv.innerHTML = "<p>تاریخ و زمان: " + dateTime + "</p>";
+      })
+      .catch(error => console.error("خطا در دریافت اطلاعات: ", error));
+}
+var apiKey = "BK59JIFJPBBO";
+var timezone = "America/New_York"; // منطقه زمانی مورد نظر
+var url = "http://api.timezonedb.com/v2/get-time-zone?key=" + apiKey + "&format=json&by=zone&zone=" + timezone;
+
+fetch(url)
+  .then(response => response.json())
+  .then(data => {
+    var countryName = data.countryName;
+    var dateTime = new Date(data.timestamp * 1000); // تبدیل زمان از ثانیه به میلی‌ثانیه
+    console.log("نام کشور: " + countryName);
+    console.log("تاریخ و زمان: " + dateTime);
+  })
+  .catch(error => console.error("خطا در دریافت اطلاعات: ", error));
+  function checkSelection() {
+    let selectedCountries = document.getElementById("countries").selectedOptions;
+    let nonEuropeanSelected = Array.from(selectedCountries).some(option => !option.classList.contains("european"));
+
+    if (nonEuropeanSelected) {
+        document.getElementById("message").innerText = "لطفا فقط کشورهای اروپایی را که درون کادر قرمز هستند انتخاب کنید";
+        document.getElementById("message").style.display = "block";
+    } else {
+        document.getElementById("message").style.display = "none";
+    }
+}
+</script>
+</body>
+</html>
