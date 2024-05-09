@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>News Information</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #aa85ccb4;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    #search-form {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    #news-search {
+      padding: 8px;
+      border-radius: 4px;
+      border: 1px solid #4c7e24d8;
+      margin-right: 5px;
+    }
+
+    #news-search:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+
+    #search-button {
+      padding: 8px 20px;
+      border-radius: 4px;
+      background-color: #86d48c;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    #search-button:hover {
+      background-color: #ac7fb9a9;
+    }
+
+    .article {
+      background-color: #fff;
+      border-radius: 4px;
+      border: 1px solid #d4bce7;
+      margin-bottom: 20px;
+      padding: 10px;
+      box-shadow: 0 2px 4px rgba(97, 167, 149, 0.815);
+    }
+
+    .article h2 {
+      color: #333;
+      margin-bottom: 5px;
+    }
+
+    .article p {
+      color: #4b831d;
+      margin-top: 0;
+    }
+  </style>
+</head>
+<body>
+  <h1>News Information</h1>
+
+  <form id="search-form">
+    <input type="text" id="news-search" name="newsSearch" placeholder="Enter news keyword...">
+    <button type="submit" id="search-button">Search</button>
+  </form>
+
+  <div id="articles-container">
+    <!-- News articles will be displayed here -->
+  </div>
+
+  <script>
+    document.getElementById('search-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+      
+      const apiKey = '1801dc87093e4d6c90b1c4aef8319799';
+      const newsKeyword = document.getElementById('news-search').value;
+      const apiUrl = 'https://newsapi.org/v2/everything?q=' + encodeURIComponent(newsKeyword) + '&apiKey=' + apiKey;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const articlesContainer = document.getElementById('articles-container');
+          articlesContainer.innerHTML = ''; // Clear previous search results
+          
+          data.articles.forEach(article => {
+            const articleElement = document.createElement('div');
+            articleElement.classList.add('article');
+
+            const titleElement = document.createElement('h2');
+            titleElement.textContent = article.title;
+
+            const descriptionElement = document.createElement('p');
+            descriptionElement.textContent = article.description;
+
+            articleElement.appendChild(titleElement);
+            articleElement.appendChild(descriptionElement);
+
+            articlesContainer.appendChild(articleElement);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching data: ', error);
+        });
+    });
+  </script>
+</body>
+</html>
