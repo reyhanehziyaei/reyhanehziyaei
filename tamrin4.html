@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تمرین چهارم </title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f0f0f0;
+        }
+        
+        .image-container {
+            text-align: center;
+        }
+        
+        #fetchedImage {
+            max-width: 100%;
+            height: auto;
+            border: 2px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="image-container">
+        <img id="fetchedImage" alt="Fetched Image" />
+    </div>
+    <div class="background-color-input">
+        <label for="bgColor">رنگ پس زمینه را وارد کنید</label>
+        <input type="color" id="bgColor" value="#f0f0f0" />
+        <button onclick="changeBackgroundColor()">تغییر رنگ</button>
+    </div>
+    <script>
+        function changeBackgroundColor() {
+            const bgColor = document.getElementById('bgColor').value;
+            document.body.style.backgroundColor = bgColor;
+        }
+
+        // Initially load the image with default size and background color
+        fetchAndDisplayImage();
+        changeBackgroundColor();
+
+        function fetchAndDisplayImage() {
+            fetch('https://dummyjson.com/icon/abc123/150') // png is default
+                .then(response => response.blob()) // Convert response to blob
+                .then(blob => {
+                    const imgElement = document.getElementById('fetchedImage');
+                    const url = URL.createObjectURL(blob);
+                    imgElement.src = url;
+                    console.log('Fetched image blob:', blob);
+                })
+                .catch(error => {
+                    console.error('Error fetching image:', error);
+                });
+        }
+    </script>
+</body>
+
+</html>
